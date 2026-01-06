@@ -22,6 +22,25 @@ async def init_db():
         await conn.run_sync(Base.metadata.create_all)
 
 
+async def seed_db():
+    async with AsyncSession(bind=engine) as session:
+        # Проверяем, есть ли уже данные
+        result = await session.execute(select(Story).limit(1))
+        exists = result.scalar_one_or_none()
+
+        if exists:
+            return  # уже засеяно — ничего не делаем
+
+        stories = [
+            Story(title="Первая история", text="Текст первой истории"),
+            Story(title="Вторая история", text="Текст второй истории"),
+            Story(title="Третья история", text="Текст третьей истории"),
+        ]
+
+        session.add_all(stories)
+        await session.commit()
+
+
 engine = create_async_engine("sqlite+aiosqlite:///my.db", echo=True)
 app = FastAPI()
 
@@ -30,9 +49,10 @@ app = FastAPI()
 async def lifespan(app: FastAPI):
     print("🚀 Запуск приложения")
     await init_db()
+    await seed_db()
     yield
     print("🛑 Остановка приложения")
-    await engine.dispose() 
+    await engine.dispose()
 
 app = FastAPI(lifespan=lifespan)
 
@@ -40,6 +60,7 @@ app = FastAPI(lifespan=lifespan)
 class StorySchema(BaseModel):
     title: str = Field(max_length=50)
     text: str
+
 
 class ListStorySchema(StorySchema):
     id: int
