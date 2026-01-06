@@ -43,16 +43,7 @@ async def seed_db():
 
 
 engine = create_async_engine("sqlite+aiosqlite:///my.db", echo=True)
-app = FastAPI()
 
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # разрешить все домены
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -65,6 +56,18 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+origins = [
+    "http://127.0.0.1:5500",  # адрес фронтенда, с которого идут запросы
+    "http://localhost:5500",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # или ["*"] для разрешения всех
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class StorySchema(BaseModel):
     title: str = Field(max_length=50)
