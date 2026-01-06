@@ -79,9 +79,9 @@ class ListStorySchema(StorySchema):
 
 
 @app.get("/stories", response_model=list[ListStorySchema])
-async def get_stories():
+async def get_stories(limit: int = 10):
     async with AsyncSession(bind=engine) as session:
-        stmt = select(Story)
+        stmt = select(Story).limit(limit)
         result = await session.execute(stmt)
         stories = result.scalars().all()
     return stories
