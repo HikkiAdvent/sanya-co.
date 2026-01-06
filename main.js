@@ -3,7 +3,7 @@ const articleTemplate = document.getElementById("article-template");
 
 function fetchArticles() {
   // Замените этот URL на адрес вашего API
-  const apiUrl = "https://jsonplaceholder.typicode.com/posts";
+  const apiUrl = "http://127.0.0.1:8000/stories";
 
   // fetch отправляет запрос и возвращает "обещание" (Promise), что когда-нибудь будет ответ
   return fetch(apiUrl).then((response) => {
@@ -30,7 +30,7 @@ function createArticleElement(articleData) {
 
   // 3. Заполняем их данными из полученного объекта
   titleElement.textContent = articleData.title;
-  descriptionElement.textContent = articleData.body; // У тестового API описание в поле "body"
+  descriptionElement.textContent = articleData.text; // У тестового API описание в поле "body"
 
   // 4. Возвращаем полностью готовый и заполненный элемент
   return articleClone;
