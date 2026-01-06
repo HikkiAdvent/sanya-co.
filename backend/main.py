@@ -6,6 +6,9 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import select
 import uvicorn
 
+from fastapi.middleware.cors import CORSMiddleware
+
+
 
 class Base(DeclarativeBase):
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -24,19 +27,17 @@ async def init_db():
 
 async def seed_db():
     async with AsyncSession(bind=engine) as session:
-        # Проверяем, есть ли уже данные
         result = await session.execute(select(Story).limit(1))
         exists = result.scalar_one_or_none()
 
         if exists:
-            return  # уже засеяно — ничего не делаем
+            return
 
         stories = [
             Story(title="Первая история", text="Текст первой истории"),
             Story(title="Вторая история", text="Текст второй истории"),
             Story(title="Третья история", text="Текст третьей истории"),
         ]
-
         session.add_all(stories)
         await session.commit()
 
@@ -44,6 +45,14 @@ async def seed_db():
 engine = create_async_engine("sqlite+aiosqlite:///my.db", echo=True)
 app = FastAPI()
 
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # разрешить все домены
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
