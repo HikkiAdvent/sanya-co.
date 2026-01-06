@@ -1,0 +1,68 @@
+/* Общий сброс и стили для body */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  background-color: #f0f2f5; /* Очень светло-серый фон */
+  color: #333; /* Основной цвет текста */
+}
+
+/* Стили для шапки */
+.header {
+  background-color: #343a40; /* Темно-серый фон */
+  color: #f8f9fa; /* Светлый текст */
+  padding: 20px;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 500;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Основной контейнер */
+main {
+  max-width: 800px;
+  margin: 30px auto; /* Центрирование блока по горизонтали с отступами */
+  padding: 0 15px;
+}
+
+/* Стили для списка статей */
+.articles-list {
+  list-style-type: none; /* Убираем маркеры списка */
+  padding: 0;
+  margin: 0;
+}
+
+/* Элемент списка (карточка) */
+.articles-list__item {
+  margin-bottom: 20px; /* Отступ между статьями */
+}
+
+.article {
+  background-color: #ffffff; /* Белый фон для самой статьи */
+  border: 1px solid #dee2e6; /* Светло-серая рамка */
+  border-radius: 8px; /* Скругленные углы */
+  padding: 25px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Легкая тень */
+  transition: box-shadow 0.3s ease-in-out; /* Плавный переход для тени */
+}
+
+/* Эффект при наведении на статью */
+.article:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Заголовок статьи */
+.article__title {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.7rem;
+  color: #212529; /* Почти черный, темно-серый */
+}
+
+/* Описание статьи */
+.article__description {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #6c757d; /* Средне-серый, для второстепенного текста */
+}
