@@ -43,8 +43,18 @@ async def seed_db():
 
 
 engine = create_async_engine("sqlite+aiosqlite:///my.db", echo=True)
-app = FastAPI()
 
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("🚀 Запуск приложения")
+    await init_db()
+    await seed_db()
+    yield
+    print("🛑 Остановка приложения")
+    await engine.dispose()
+
+app = FastAPI(lifespan=lifespan)
 
 origins = [
     "http://127.0.0.1:5500",  # адрес фронтенда, с которого идут запросы
@@ -58,18 +68,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    print("🚀 Запуск приложения")
-    await init_db()
-    await seed_db()
-    yield
-    print("🛑 Остановка приложения")
-    await engine.dispose()
-
-app = FastAPI(lifespan=lifespan)
-
 
 class StorySchema(BaseModel):
     title: str = Field(max_length=50)
