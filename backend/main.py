@@ -7,7 +7,9 @@ from sqlalchemy import select
 import uvicorn
 
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 
+from html import html
 
 
 class Base(DeclarativeBase):
@@ -59,6 +61,7 @@ app = FastAPI(lifespan=lifespan)
 origins = [
     "http://127.0.0.1:5500",  # адрес фронтенда, с которого идут запросы
     "http://localhost:5500",
+    "http://127.0.0.1"
 ]
 
 app.add_middleware(
@@ -77,6 +80,10 @@ class StorySchema(BaseModel):
 class ListStorySchema(StorySchema):
     id: int
 
+
+@app.get("/", response_class=HTMLResponse)
+def get_form():
+    return html
 
 @app.get("/stories", response_model=list[ListStorySchema])
 async def get_stories(limit: int = 10):
